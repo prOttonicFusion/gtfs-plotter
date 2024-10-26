@@ -2,6 +2,19 @@ import pandas as pd
 import plotly.express as px
 from typing import TypedDict
 from .util import clean_shapes, generate_color_scale
+import plotly.io as pio
+import plotly.graph_objects as go
+
+pio.templates["custom_theme"] = go.layout.Template(
+    layout=dict(
+        font=dict(
+            color="#d6d6d6",
+        ),
+        paper_bgcolor="#1c1c1c",
+        legend=dict(bgcolor="rgba(0,0,0,0)"),
+    ),
+)
+pio.templates.default = "plotly+custom_theme"
 
 
 class Filter(TypedDict):
@@ -44,5 +57,6 @@ def plot(
     )
 
     fig.update_layout(mapbox_style=map_style)
-    fig.update_layout(margin={"r": 10, "t": 10, "l": 10, "b": 10})
+    fig.update_layout(margin={"r": 0, "t": 0, "l": 0, "b": 0})
+
     fig.show()
