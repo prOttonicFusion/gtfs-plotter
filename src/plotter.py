@@ -1,21 +1,34 @@
 import pandas as pd
 import plotly.express as px
+from typing import TypedDict
 from .util import clean_shapes, generate_color_scale
+
+
+class Filter(TypedDict):
+    by: str
+    values: list[str]
 
 
 def plot(
     shapes_path: str,
     routes_path: str,
-    shape_id_regex: str | None,
     heigth: int,
     width: int,
     zoom: int,
     map_style: str,
+    shape_id_regex: str | None = None,
+    route_filter: Filter | None = None,
 ):
     shapes_df = pd.read_csv(shapes_path)
+    shapes_df = clean_shapes(shapes_df, regex=shape_id_regex)
+
     routes_df = pd.read_csv(routes_path)
 
-    shapes_df = clean_shapes(shapes_df, regex=shape_id_regex)
+    if route_filter:
+        shapes_df = shapes_df[
+            shapes_df[route_filter["by"]].isin(route_filter["values"])
+        ]
+
     color_scale = generate_color_scale(routes_df)
 
     fig = px.line_mapbox(

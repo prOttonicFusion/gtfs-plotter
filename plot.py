@@ -16,6 +16,17 @@ def main():
         default=None,
         help="A regular expression for selecting the route ID from the shape_id column. E.g. for MTA's NYC subway this would be '^[^.]+'",
     )
+    parser.add_argument(
+        "--filter-routes-by",
+        default="route_id",
+        help="Column to filter routes by. E.g. route_id or agency_id. Defaults to no filtering.",
+    )
+    parser.add_argument(
+        "--filter-routes",
+        nargs="+",
+        default=[],
+        help="Route filter values. Defaults to no filtering.",
+    )
 
     parser.add_argument(
         "--width", type=int, default=1000, help="The display width of the map"
@@ -40,6 +51,11 @@ def main():
         width=args.width,
         zoom=args.zoom,
         map_style=args.map_style,
+        route_filter=(
+            {"by": args.filter_routes_by, "values": args.filter_routes}
+            if args.filter_routes
+            else None
+        ),
     )
 
 
