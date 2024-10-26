@@ -1,11 +1,18 @@
 import pandas as pd
 import plotly.express as px
-from util import clean_shapes, generate_color_scale
+from .util import clean_shapes, generate_color_scale
 
 default_route_color = "000000"
 
 
-def plot(shapes_path: str, routes_path: str):
+def plot(
+    shapes_path: str,
+    routes_path: str,
+    heigth: int,
+    width: int,
+    zoom: int,
+    map_style: str,
+):
     shapes_df = pd.read_csv(shapes_path)
     routes_df = pd.read_csv(routes_path)
 
@@ -19,11 +26,11 @@ def plot(shapes_path: str, routes_path: str):
         lon="shape_pt_lon",
         color="route_id",
         color_discrete_map=color_scale,
-        zoom=10,
-        width=1000,
-        height=1000,
+        zoom=zoom,
+        width=width,
+        height=heigth,
     )
 
-    fig.update_layout(mapbox_style="open-street-map")
+    fig.update_layout(mapbox_style=map_style)
     fig.update_layout(margin={"r": 10, "t": 10, "l": 10, "b": 10})
     fig.show()

@@ -11,10 +11,29 @@ def main():
     parser.add_argument(
         "-r", "--routes-path", required=True, help="Path to the GTFS routes.txt"
     )
+    parser.add_argument(
+        "--width", type=int, default=1000, help="The display width of the map"
+    )
+    parser.add_argument(
+        "--heigth", type=int, default=1000, help="The display heigth of the map"
+    )
+    parser.add_argument("--zoom", type=int, default=10, help="The map zoom level")
+    parser.add_argument(
+        "--map-style",
+        default="open-street-map",
+        help="Name of the map style to use. Accepts most Plotly map stiles, e.g. carto-darkmatter, carto-positron, open-street-map, white-bg",
+    )
 
     args = parser.parse_args()
 
-    plot(shapes_path=args.shapes_path, routes_path=args.routes_path)
+    plot(
+        shapes_path=args.shapes_path,
+        routes_path=args.routes_path,
+        heigth=args.heigth,
+        width=args.width,
+        zoom=args.zoom,
+        map_style=args.map_style,
+    )
 
 
 if __name__ == "__main__":
