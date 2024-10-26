@@ -1,2 +1,4 @@
 venv/
-google_transit_supplemented/
+*.pyc
+
+*.txt
