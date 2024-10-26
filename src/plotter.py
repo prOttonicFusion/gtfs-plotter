@@ -2,12 +2,11 @@ import pandas as pd
 import plotly.express as px
 from .util import clean_shapes, generate_color_scale
 
-default_route_color = "000000"
-
 
 def plot(
     shapes_path: str,
     routes_path: str,
+    shape_id_regex: str | None,
     heigth: int,
     width: int,
     zoom: int,
@@ -16,8 +15,8 @@ def plot(
     shapes_df = pd.read_csv(shapes_path)
     routes_df = pd.read_csv(routes_path)
 
-    shapes_df = clean_shapes(shapes_df)
-    color_scale = generate_color_scale(routes_df, default_route_color)
+    shapes_df = clean_shapes(shapes_df, regex=shape_id_regex)
+    color_scale = generate_color_scale(routes_df)
 
     fig = px.line_mapbox(
         shapes_df,

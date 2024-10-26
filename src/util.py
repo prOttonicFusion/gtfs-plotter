@@ -1,19 +1,44 @@
 import pandas as pd
+import re
 
 
-def generate_color_scale(routes: pd.DataFrame, default_color: str) -> dict[str, str]:
+def parse_color(color_str: str) -> str:
+    if color_str.startswith("#"):
+        return color_str
+    if re.fullmatch(r"([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})", color_str):
+        return f"#{color_str}"
+    return color_str
+
+
+def generate_color_scale(routes: pd.DataFrame) -> dict[str, str]:
     scale = {}
     for _, r in routes.iterrows():
         route_id = r["route_id"]
-        route_hex_code = r["route_color"]
-        if pd.isna(route_hex_code):
-            route_hex_code = default_color
+        route_color = None
 
-        scale[route_id] = f"#{route_hex_code}"
+        if "route_color" in r and not pd.isna(r["route_color"]):
+            route_color = parse_color(r["route_color"])
+
+        scale[route_id] = route_color
 
     return scale
 
 
-def clean_shapes(shapes: pd.DataFrame) -> pd.DataFrame:
-    shapes["route_id"] = shapes.apply(lambda row: row["shape_id"].split(".")[0], axis=1)
+def get_route_id_from_shape_id(shapes_df: pd.Series, regex: str) -> str:
+    match = re.match(regex, shapes_df["shape_id"])
+    if not match:
+        raise Exception(
+            f"Unable to find match for route id in shape_id '{shapes_df['shape_id']}' using regex '{regex}'"
+        )
+    return match.group(0)
+
+
+def clean_shapes(shapes: pd.DataFrame, regex: str | None = None) -> pd.DataFrame:
+    if not regex:
+        shapes["route_id"] = shapes["shape_id"]
+    else:
+
+        shapes["route_id"] = shapes.apply(
+            get_route_id_from_shape_id, args=(regex,), axis=1
+        )
     return shapes

@@ -12,6 +12,12 @@ def main():
         "-r", "--routes-path", required=True, help="Path to the GTFS routes.txt"
     )
     parser.add_argument(
+        "--shape-id-regex",
+        default=None,
+        help="A regular expression for selecting the route ID from the shape_id column. E.g. for MTA's NYC subway this would be '^[^.]+'",
+    )
+
+    parser.add_argument(
         "--width", type=int, default=1000, help="The display width of the map"
     )
     parser.add_argument(
@@ -29,6 +35,7 @@ def main():
     plot(
         shapes_path=args.shapes_path,
         routes_path=args.routes_path,
+        shape_id_regex=args.shape_id_regex,
         heigth=args.heigth,
         width=args.width,
         zoom=args.zoom,
