@@ -6,15 +6,7 @@ def main():
     parser = argparse.ArgumentParser()
 
     parser.add_argument(
-        "-s", "--shapes-path", required=True, help="Path to the GTFS shapes.txt"
-    )
-    parser.add_argument(
-        "-r", "--routes-path", required=True, help="Path to the GTFS routes.txt"
-    )
-    parser.add_argument(
-        "--shape-id-regex",
-        default=None,
-        help="A regular expression for selecting the route ID from the shape_id column. E.g. for MTA's NYC subway this would be '^[^.]+'",
+        "gtfs_path", help="Path to a directory containing the GTFS files"
     )
     parser.add_argument(
         "--filter-routes-by",
@@ -44,9 +36,7 @@ def main():
     args = parser.parse_args()
 
     plot(
-        shapes_path=args.shapes_path,
-        routes_path=args.routes_path,
-        shape_id_regex=args.shape_id_regex,
+        gtfs_path=args.gtfs_path,
         heigth=args.heigth,
         width=args.width,
         zoom=args.zoom,

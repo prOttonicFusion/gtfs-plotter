@@ -28,22 +28,22 @@ make lint && make typecheck && make test
 
 ### New York City Subway
 
-Assuming the GTFS data has been exported to `./mta_subway`:
+Assuming the GTFS data has been exported to `./data/mta_subway`:
 ```sh
-python3 plot.py -s mta_subway/shapes.txt -r mta_subway/routes.txt --shape-id-regex '^[^.]+' --map-style carto-darkmatter --heigth 820 --width 1000 --zoom 10
+python3 plot.py data/mta_subway --map-style carto-darkmatter --heigth 820 --width 1000 --zoom 10
 ```
 <img src="./docs/nyc_subway.jpg" width="800px" />
 
 ### Helsinki Metro:
 
 ```sh
-python3 plot.py -s hsl/shapes.txt -r hsl/routes.txt --shape-id-regex '^[^_ ]+' --map-style carto-darkmatter --filter-routes 31M2 31M1 --width 1000 --heigth 500 --zoom 10
+python3 plot.py data/hsl --map-style carto-darkmatter --filter-routes 31M2 31M1 --width 1000 --heigth 500 --zoom 10
 ```
 <img src="./docs/helsinki_metro.jpg" width="800px" />
 
 ### Los Angeles Metro Rail:
 
 ```sh
-python3 plot.py -s la_metro_rail/shapes.txt -r la_metro_rail/routes.txt --shape-id-regex '^[^a-zA-Z]+' --map-style carto-darkmatter --heigth 820 --width 1000 --zoom 10
+python3 plot.py data/la_metro_rail --map-style carto-darkmatter --heigth 820 --width 1000 --zoom 10
 ```
 <img src="./docs/la_metro_rail.jpg" width="800px" />

@@ -1,5 +1,5 @@
-import pandas as pd
 import re
+import pandas as pd
 
 
 def parse_color(color_str) -> str:
@@ -33,14 +33,3 @@ def get_route_id_from_shape_id(shapes_df: pd.Series, regex: str) -> str:
             f"Unable to find match for route id in shape_id '{shapes_df['shape_id']}' using regex '{regex}'"
         )
     return match.group(0)
-
-
-def clean_shapes(shapes: pd.DataFrame, regex: str | None = None) -> pd.DataFrame:
-    if not regex:
-        shapes["route_id"] = shapes["shape_id"]
-    else:
-
-        shapes["route_id"] = shapes.apply(
-            get_route_id_from_shape_id, args=(regex,), axis=1
-        )
-    return shapes

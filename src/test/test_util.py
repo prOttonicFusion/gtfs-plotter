@@ -1,6 +1,6 @@
 import unittest
 import pandas as pd
-from ..util import generate_color_scale, clean_shapes, parse_color
+from ..util import generate_color_scale, parse_color
 
 
 class Test_generate_color_scale(unittest.TestCase):
@@ -47,12 +47,3 @@ class Test_parse_color(unittest.TestCase):
     def test_shouldReturnNonHexColorsAsIs(self):
         self.assertEqual(parse_color("12G45A"), "12G45A")
         self.assertEqual(parse_color("red"), "red")
-
-
-class Test_clean_shapes(unittest.TestCase):
-    def test_shouldAddValidRouteIdCol(self):
-        shapes_df = pd.DataFrame({"shape_id": ["X..Foo", "X.Bar", "12..200"]})
-        clean = clean_shapes(shapes=shapes_df, regex="^[^.]+")
-        self.assertEqual(clean["route_id"].loc[0], "X")
-        self.assertEqual(clean["route_id"].loc[1], "X")
-        self.assertEqual(clean["route_id"].loc[2], "12")

@@ -1,7 +1,6 @@
-import pandas as pd
 import plotly.express as px
-from typing import TypedDict
-from .util import clean_shapes, generate_color_scale
+from .util import generate_color_scale
+from .parser import parse_gtfs, Filter
 import plotly.io as pio
 import plotly.graph_objects as go
 
@@ -17,35 +16,19 @@ pio.templates["custom_theme"] = go.layout.Template(
 pio.templates.default = "plotly+custom_theme"
 
 
-class Filter(TypedDict):
-    by: str
-    values: list[str]
-
-
 def plot(
-    shapes_path: str,
-    routes_path: str,
+    gtfs_path: str,
     heigth: int,
     width: int,
     zoom: int,
     map_style: str,
-    shape_id_regex: str | None = None,
     route_filter: Filter | None = None,
 ):
-    shapes_df = pd.read_csv(shapes_path)
-    shapes_df = clean_shapes(shapes_df, regex=shape_id_regex)
-
-    routes_df = pd.read_csv(routes_path)
-
-    if route_filter:
-        shapes_df = shapes_df[
-            shapes_df[route_filter["by"]].isin(route_filter["values"])
-        ]
-
-    color_scale = generate_color_scale(routes_df)
+    gtfs = parse_gtfs(gtfs_path, route_filter)
+    color_scale = generate_color_scale(gtfs["routes"])
 
     fig = px.line_mapbox(
-        shapes_df,
+        gtfs["shapes"],
         line_group="shape_id",
         lat="shape_pt_lat",
         lon="shape_pt_lon",
