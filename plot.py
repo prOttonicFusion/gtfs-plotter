@@ -2,6 +2,8 @@ import argparse
 import pandas as pd
 import plotly.express as px
 
+default_route_color = "000000"
+
 
 def generate_color_scale(routes: pd.DataFrame) -> dict[str, str]:
     scale = {}
@@ -9,7 +11,7 @@ def generate_color_scale(routes: pd.DataFrame) -> dict[str, str]:
         route_id = r["route_id"]
         route_hex_code = r["route_color"]
         if pd.isna(route_hex_code):
-            route_hex_code = "000"
+            route_hex_code = default_route_color
 
         scale[route_id] = f"#{route_hex_code}"
 
@@ -25,16 +27,14 @@ def plot(shapes_path: str, routes_path: str):
     )
 
     color_scale = generate_color_scale(routes_df)
-    print(color_scale)
 
-    fig = px.scatter_mapbox(
+    fig = px.line_mapbox(
         shapes_df,
+        line_group="shape_id",
         lat="shape_pt_lat",
         lon="shape_pt_lon",
         color="route_id",
         color_discrete_map=color_scale,
-        # hover_name="Address",
-        # hover_data=["Address", "Listed"],
         zoom=10,
         width=1000,
         height=1000,
