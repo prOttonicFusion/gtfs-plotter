@@ -9,6 +9,12 @@ def main():
         "gtfs_path", help="Path to a directory containing the GTFS files"
     )
     parser.add_argument(
+        "--stops",
+        action="store_true",
+        default=False,
+        help="Whether to show stations/stops",
+    )
+    parser.add_argument(
         "--filter-routes-by",
         default="route_id",
         help="Column to filter routes by. E.g. route_id or agency_id. Defaults to no filtering.",
@@ -41,6 +47,7 @@ def main():
         width=args.width,
         zoom=args.zoom,
         map_style=args.map_style,
+        show_stops=args.stops,
         route_filter=(
             {"by": args.filter_routes_by, "values": args.filter_routes}
             if args.filter_routes

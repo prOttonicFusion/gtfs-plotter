@@ -1,6 +1,11 @@
 import unittest
 import pandas as pd
-from ..parser import map_shapes_to_route, filter_routes, Filter
+from ..parser import (
+    Filter,
+    add_route_id_to_shapes,
+    filter_routes,
+    filter_stops_by_routes,
+)
 
 
 class Test_filter_routes(unittest.TestCase):
@@ -20,7 +25,7 @@ class Test_filter_routes(unittest.TestCase):
         self.assertEqual(filtered.iloc[0]["route_id"], "B")
 
 
-class Test_map_shapes_to_route(unittest.TestCase):
+class Test_add_route_id_to_shapes(unittest.TestCase):
     routes = pd.DataFrame(
         {"agency_id": ["Foo Inc.", "Foo Inc."], "route_id": ["A", "C"]}
     )
@@ -39,13 +44,51 @@ class Test_map_shapes_to_route(unittest.TestCase):
         }
     )
 
-    def test_shouldReturnMapped(self):
-        mapped = map_shapes_to_route(
-            shapes_df=self.shapes, trips_df=self.trips, routes_df=self.routes
+    def test_shouldReturnShapesWithRoutes(self):
+        shapes = add_route_id_to_shapes(
+            shapes=self.shapes, trips=self.trips, routes=self.routes
         )
-        self.assertEqual(mapped.shape[0], 2)
-        self.assertEqual(mapped.iloc[0]["shape_id"], "A-1234")
-        self.assertEqual(mapped.iloc[0]["route_id"], "A")
+        self.assertEqual(shapes.shape[0], 2)
+        self.assertEqual(shapes.iloc[0]["shape_id"], "A-1234")
+        self.assertEqual(shapes.iloc[0]["route_id"], "A")
 
-        self.assertEqual(mapped.iloc[1]["shape_id"], "C-8431")
-        self.assertEqual(mapped.iloc[1]["route_id"], "C")
+        self.assertEqual(shapes.iloc[1]["shape_id"], "C-8431")
+        self.assertEqual(shapes.iloc[1]["route_id"], "C")
+
+
+class Test_filter_stops_by_routes(unittest.TestCase):
+    routes = pd.DataFrame(
+        {"agency_id": ["Foo Inc.", "Foo Inc."], "route_id": ["A", "C"]}
+    )
+    stops = pd.DataFrame(
+        {
+            "stop_id": ["Here", "There", "Nowhere"],
+            "stop_pt_lat": ["1.234", "4.567", "7.890"],
+            "stop_pt_lon": ["4.321", "7.654", "0.123"],
+        }
+    )
+    stop_times = pd.DataFrame(
+        {
+            "trip_id": ["A-1234", "B-456", "C-8431", "A-1234"],
+            "stop_id": ["Here", "There", "Nowhere", "Nowhere"],
+            "arrival_time": ["10:32:00", "11:00:00", "12:45:00", "12:50:00"],
+        }
+    )
+    trips = pd.DataFrame(
+        {
+            "trip_id": ["A-1234", "B-456", "C-8431"],
+            "route_id": ["A", "B", "C"],
+            "direction_id": ["North-1", "South-1", "West-2"],
+        }
+    )
+
+    def test_shouldReturnFiltered(self):
+        filtered = filter_stops_by_routes(
+            stops=self.stops,
+            stop_times=self.stop_times,
+            routes=self.routes,
+            trips=self.trips,
+        )
+        self.assertEqual(filtered.shape[0], 2)
+        self.assertEqual(filtered.iloc[0]["stop_id"], "Here")
+        self.assertEqual(filtered.iloc[1]["stop_id"], "Nowhere")

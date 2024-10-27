@@ -18,6 +18,7 @@ pio.templates.default = "plotly+custom_theme"
 
 def plot(
     gtfs_path: str,
+    show_stops: bool,
     heigth: int,
     width: int,
     zoom: int,
@@ -38,6 +39,15 @@ def plot(
         width=width,
         height=heigth,
     )
+
+    if show_stops:
+        fig.add_scattermapbox(
+            name="Stops",
+            lat=gtfs["stops"]["stop_lat"],
+            lon=gtfs["stops"]["stop_lon"],
+            hovertext=gtfs["stops"]["stop_name"],
+            marker={"color": "white", "size": 5},
+        )
 
     fig.update_layout(mapbox_style=map_style)
     fig.update_layout(margin={"r": 0, "t": 0, "l": 0, "b": 0})

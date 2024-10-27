@@ -32,18 +32,18 @@ Assuming the GTFS data has been exported to `./data/mta_subway`:
 ```sh
 python3 plot.py data/mta_subway --map-style carto-darkmatter --heigth 820 --width 1000 --zoom 10
 ```
-<img src="./docs/nyc_subway.jpg" width="800px" />
+<img src="./docs/nyc_subway.png" width="800px" />
 
 ### Helsinki Metro:
 
 ```sh
-python3 plot.py data/hsl --map-style carto-darkmatter --filter-routes 31M2 31M1 --width 1000 --heigth 500 --zoom 10
+python3 plot.py data/hsl --map-style carto-darkmatter --filter-routes 31M2 31M1 --width 1000 --heigth 500 --zoom 10 --stops
 ```
-<img src="./docs/helsinki_metro.jpg" width="800px" />
+<img src="./docs/helsinki_metro.png" width="800px" />
 
 ### Los Angeles Metro Rail:
 
 ```sh
 python3 plot.py data/la_metro_rail --map-style carto-darkmatter --heigth 820 --width 1000 --zoom 10
 ```
-<img src="./docs/la_metro_rail.jpg" width="800px" />
+<img src="./docs/la_metro_rail.png" width="800px" />
