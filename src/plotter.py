@@ -25,7 +25,7 @@ def plot(
     map_style: str,
     route_filter: Filter | None = None,
 ):
-    gtfs = parse_gtfs(gtfs_path, route_filter)
+    gtfs = parse_gtfs(gtfs_path, route_filter, parse_stops=show_stops)
     color_scale = generate_color_scale(gtfs["routes"])
 
     fig = px.line_mapbox(

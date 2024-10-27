@@ -14,22 +14,13 @@ def parse_color(color_str) -> str:
 
 def generate_color_scale(routes: pd.DataFrame) -> dict[str, str]:
     scale = {}
-    for _, r in routes.iterrows():
-        route_id = r["route_id"]
+    for _, row in routes.iterrows():
+        route_id = row["route_id"]
         route_color = None
 
-        if "route_color" in r and not pd.isna(r.loc["route_color"]):
-            route_color = parse_color(r.loc["route_color"])
+        if "route_color" in row and not pd.isna(row.loc["route_color"]):
+            route_color = parse_color(row.loc["route_color"])
 
         scale[route_id] = route_color
 
     return scale
-
-
-def get_route_id_from_shape_id(shapes_df: pd.Series, regex: str) -> str:
-    match = re.match(regex, str(shapes_df["shape_id"]))
-    if not match:
-        raise Exception(
-            f"Unable to find match for route id in shape_id '{shapes_df['shape_id']}' using regex '{regex}'"
-        )
-    return match.group(0)
