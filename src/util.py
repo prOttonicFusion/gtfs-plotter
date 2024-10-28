@@ -2,9 +2,9 @@ import re
 import pandas as pd
 
 
-def parse_color(color_str) -> str:
-    if not isinstance(color_str, str):
-        raise TypeError(f"Expected route_color to be a string")
+def parse_color(color_str) -> str | None:
+    if not color_str:
+        return None
     if color_str.startswith("#"):
         return color_str
     if re.fullmatch(r"([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})", color_str):

@@ -58,12 +58,22 @@ def filter_stops_by_routes(
     return stops
 
 
+def read_gtfs_csv(file_path: str, usecols: list[str] | None = None) -> pd.DataFrame:
+    df = pd.read_csv(file_path, dtype=str, keep_default_na=False, usecols=usecols)
+
+    for col in df.columns:
+        if col.endswith("_lat") or col.endswith("_lon"):
+            df[col] = df[col].astype(float)
+
+    return df
+
+
 def parse_gtfs(
     gtfs_path: str, route_filter: Filter | None = None, parse_stops=True
 ) -> Gtfs:
-    shapes = pd.read_csv(path.join(gtfs_path, "shapes.txt"))
-    routes = pd.read_csv(path.join(gtfs_path, "routes.txt"))
-    trips = pd.read_csv(
+    shapes = read_gtfs_csv(path.join(gtfs_path, "shapes.txt"))
+    routes = read_gtfs_csv(path.join(gtfs_path, "routes.txt"))
+    trips = read_gtfs_csv(
         path.join(gtfs_path, "trips.txt"), usecols=["trip_id", "route_id", "shape_id"]
     )
 
@@ -75,9 +85,14 @@ def parse_gtfs(
         stops = pd.read_csv(
             path.join(gtfs_path, "stops.txt"),
             usecols=["stop_id", "stop_lon", "stop_lat", "stop_name"],
+            dtype=str,
+            keep_default_na=False,
         )
         stop_times = pd.read_csv(
-            path.join(gtfs_path, "stop_times.txt"), usecols=["trip_id", "stop_id"]
+            path.join(gtfs_path, "stop_times.txt"),
+            usecols=["trip_id", "stop_id"],
+            dtype=str,
+            keep_default_na=False,
         )
         stops = filter_stops_by_routes(
             stops=stops, stop_times=stop_times, trips=trips, routes=routes
