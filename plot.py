@@ -32,6 +32,12 @@ def main():
     parser.add_argument(
         "--heigth", type=int, default=1000, help="The display heigth of the map"
     )
+    parser.add_argument(
+        "--line-width", type=int, default=2, help="Width of transit lines (in px)"
+    )
+    parser.add_argument(
+        "--marker-size", type=int, default=5, help="Size of the stops markers (in px)"
+    )
     parser.add_argument("--zoom", type=int, default=10, help="The map zoom level")
     parser.add_argument(
         "--map-style",
@@ -53,6 +59,8 @@ def main():
             if args.filter_routes
             else None
         ),
+        marker_size=args.marker_size,
+        line_width=args.line_width,
     )
 
 

@@ -24,6 +24,8 @@ def plot(
     zoom: int,
     map_style: str,
     route_filter: Filter | None = None,
+    line_width: int = 1,
+    marker_size: int = 5,
 ):
     gtfs = parse_gtfs(gtfs_path, route_filter, parse_stops=show_stops)
     color_scale = generate_color_scale(gtfs["routes"])
@@ -46,9 +48,10 @@ def plot(
             lat=gtfs["stops"]["stop_lat"],
             lon=gtfs["stops"]["stop_lon"],
             hovertext=gtfs["stops"]["stop_name"],
-            marker={"color": "white", "size": 5},
+            marker={"color": "white", "size": marker_size},
         )
 
+    fig.update_traces(line_width=line_width)
     fig.update_layout(mapbox_style=map_style)
     fig.update_layout(margin={"r": 0, "t": 0, "l": 0, "b": 0})
 
